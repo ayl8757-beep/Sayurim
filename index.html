@@ -4979,6 +4979,11 @@ window.__sayurim = {
   basketPos: () => [+BASKET_POS.x.toFixed(2), +BASKET_POS.z.toFixed(2)],
   basketLeft: () => basketCookies.filter(c => c.visible).length,
   collectFloor: (i) => collectFloorCookie(floorCookies[i || 0]),
+  floorScreen: (i) => {
+    const f = floorCookies[i || 0];
+    const v = f.grp.position.clone().project(camera);
+    return { x: (v.x * 0.5 + 0.5) * window.innerWidth, y: (-v.y * 0.5 + 0.5) * window.innerHeight, z: v.z, alive: f.alive };
+  },
   speedRespawn: () => { floorCookies.forEach(f => { if (!f.alive) f.respawn = 0.05; }); },
   press: () => ({ down: ckDown, moved: +ckMoved.toFixed(1), at: Math.round(performance.now() - ckDownAt) }),
   present: () => ({
