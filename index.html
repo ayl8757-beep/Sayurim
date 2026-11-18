@@ -3157,8 +3157,9 @@ function tinyCookie() {
 
 const basket = new T.Group();
 const BASKET_POS = new T.Vector3(2.15, 0, 1.45);
-basket.position.set(BASKET_POS.x, heightAt(BASKET_POS.x, BASKET_POS.z), BASKET_POS.z);
+basket.position.set(BASKET_POS.x, heightAt(BASKET_POS.x, BASKET_POS.z) - 0.035, BASKET_POS.z);
 basket.rotation.y = -0.4;
+basket.scale.setScalar(1.28);
 scene.add(basket);
 const basketCookies = [];
 
@@ -3958,7 +3959,8 @@ const COOKIE_HOME = 1.10;
 /* the cookie now rests in the basket on the ground, and is handed over from there */
 const CK_WORLD_SCALE = 0.28;
 shrine.updateMatrixWorld(true);
-const CK_BASKET_LOCAL = shrine.worldToLocal(new T.Vector3(BASKET_POS.x, basket.position.y + 0.33, BASKET_POS.z));
+basket.updateMatrixWorld(true);
+const CK_BASKET_LOCAL = shrine.worldToLocal(basket.localToWorld(new T.Vector3(0, 0.345, 0)));
 cookieRoot.position.copy(CK_BASKET_LOCAL);
 cookieRoot.scale.setScalar(CK_WORLD_SCALE);
 const CK_IDLE = { x: -0.62, y: 0.44, z: 0.12 };
@@ -4023,7 +4025,8 @@ function requestCookie() {
   const d = Math.hypot(player.pos.x - BASKET_POS.x, player.pos.z - BASKET_POS.z);
   if (d > 3.0) {
     const dir = new T.Vector3(player.pos.x - BASKET_POS.x, 0, player.pos.z - BASKET_POS.z).normalize();
-    const p = new T.Vector3(BASKET_POS.x + dir.x * 1.15, 0, BASKET_POS.z + dir.z * 1.15);
+    const ang = Math.atan2(dir.x, dir.z) + 0.62;      /* stand beside it, not in front of it */
+    const p = new T.Vector3(BASKET_POS.x + Math.sin(ang) * 1.55, 0, BASKET_POS.z + Math.cos(ang) * 1.55);
     walkTo(p, () => openCookie());
     toast('바구니 앞으로 걸어갈게요', 1800);
   } else {
